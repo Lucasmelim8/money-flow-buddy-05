@@ -81,13 +81,14 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink 
-                      to={item.url} 
-                      className={getNavCls}
-                      title={isCollapsed ? item.title : undefined}
-                    >
-                      <item.icon className="w-4 h-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
+  to={item.url} 
+  className={({ isActive }) => getNavCls({ isActive })}
+  title={isCollapsed ? item.title : undefined}
+>
+  <item.icon className="w-4 h-4" />
+  {!isCollapsed && <span>{item.title}</span>}
+</NavLink>
+
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
