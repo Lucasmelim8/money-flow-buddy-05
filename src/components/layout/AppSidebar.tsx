@@ -22,6 +22,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAppContext } from "@/context/AppContext";
 
 const navigationItems = [
@@ -39,20 +40,19 @@ export function AppSidebar() {
   const { state, dispatch } = useAppContext();
   const currentPath = location.pathname;
 
-  const isActive = (path: string) => currentPath === path;
+  const isCollapsed = sidebarState === "collapsed";
+
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-primary text-primary-foreground font-medium shadow-sm" 
+      ? "bg-primary text-primary-foreground font-medium shadow-sm"
       : "text-sidebar-foreground hover:bg-accent hover:text-accent-foreground";
 
   const handleLogout = () => {
-    dispatch({ type: 'SET_USER', payload: null });
+    dispatch({ type: "SET_USER", payload: null });
   };
 
-  const isCollapsed = sidebarState === "collapsed";
-
   return (
-    <Sidebar 
+    <Sidebar
       className={`transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-r border-border`}
       collapsible="icon"
     >
@@ -79,17 +79,22 @@ export function AppSidebar() {
             <SidebarMenu>
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink 
-  to={item.url} 
-  className={({ isActive }) => getNavCls({ isActive })}
-  title={isCollapsed ? item.title : undefined}
->
-  <item.icon className="w-4 h-4" />
-  {!isCollapsed && <span>{item.title}</span>}
-</NavLink>
-
-                  </SidebarMenuButton>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SidebarMenuButton asChild>
+                          <NavLink
+                            to={item.url}
+                            className={({ isActive }) => getNavCls({ isActive })}
+                          >
+                            <item.icon className="w-4 h-4" />
+                            {!isCollapsed && <span>{item.title}</span>}
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </TooltipTrigger>
+                      {isCollapsed && <TooltipContent side="right">{item.title}</TooltipContent>}
+                    </Tooltip>
+                  </TooltipProvider>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -106,16 +111,23 @@ export function AppSidebar() {
                 <p className="text-xs text-muted-foreground">{state.user.email}</p>
               </div>
             )}
-            <Button
-              variant="ghost"
-              size={isCollapsed ? "icon" : "sm"}
-              onClick={handleLogout}
-              className="w-full justify-start text-muted-foreground hover:text-foreground"
-              title={isCollapsed ? "Sair" : undefined}
-            >
-              <LogOut className="w-4 h-4" />
-              {!isCollapsed && <span className="ml-2">Sair</span>}
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size={isCollapsed ? "icon" : "sm"}
+                    onClick={handleLogout}
+                    className="w-full justify-start text-muted-foreground hover:text-foreground"
+                    title={isCollapsed ? "Sair" : undefined}
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {!isCollapsed && <span className="ml-2">Sair</span>}
+                  </Button>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Sair</TooltipContent>}
+              </Tooltip>
+            </TooltipProvider>
           </div>
         )}
       </SidebarFooter>
