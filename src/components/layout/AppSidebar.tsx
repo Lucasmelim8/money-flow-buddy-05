@@ -26,9 +26,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import React from "react";
 
 // --- DADOS MOCK (SUBSTITUINDO O CONTEXTO AUSENTE) ---
-// O erro ocorreu porque o AppContext não foi fornecido.
 // Para demonstração, estamos usando um objeto de usuário mock.
-// Em uma aplicação real, você substituiria isso pelo seu contexto de autenticação.
 const mockUser = {
   name: "Usuário Exemplo",
   email: "usuario@exemplo.com",
@@ -52,6 +50,7 @@ const getNavCls = (isActive) =>
     : "text-sidebar-foreground hover:bg-accent hover:text-accent-foreground";
 
 // --- COMPONENTE DE ITEM DE NAVEGAÇÃO REUTILIZÁVEL ---
+// Adicionada a classe 'justify-center' quando colapsado para centralizar o ícone.
 const NavItem = ({ item, isCollapsed }) => (
   <SidebarMenuItem>
     <TooltipProvider delayDuration={0}>
@@ -60,12 +59,12 @@ const NavItem = ({ item, isCollapsed }) => (
           <SidebarMenuButton asChild>
             <NavLink
               to={item.url}
-              className={({ isActive }) => getNavCls(isActive)}
+              className={({ isActive }) =>
+                `${getNavCls(isActive)} ${isCollapsed ? "justify-center" : ""}`
+              }
             >
               <item.icon className="w-4 h-4 shrink-0" />
-              <span className={`transition-opacity duration-200 ${isCollapsed ? "opacity-0 w-0" : "opacity-100 ml-2"}`}>
-                {item.title}
-              </span>
+              {!isCollapsed && <span className="ml-2">{item.title}</span>}
             </NavLink>
           </SidebarMenuButton>
         </TooltipTrigger>
@@ -81,29 +80,21 @@ const NavItem = ({ item, isCollapsed }) => (
 
 // --- COMPONENTE PRINCIPAL DA SIDEBAR ---
 export function AppSidebar() {
-  // O hook useSidebar pode não estar disponível, então vamos simular seu estado.
-  // Se você tiver o hook, pode descomentar a linha abaixo e remover a simulação.
-  // const { state: sidebarState } = useSidebar();
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  // Restaurado o uso do hook 'useSidebar' para consistência com o código original.
+  const { state: sidebarState } = useSidebar();
+  const isCollapsed = sidebarState === "collapsed";
   
-  // Simulação do estado do usuário, já que o contexto não está disponível.
+  // Simulação do estado do usuário.
   const state = { user: mockUser };
 
   const handleLogout = () => {
-    // A função dispatch foi removida pois dependia do contexto.
     console.log("Logout acionado!");
   };
   
-  // Simulação da funcionalidade de colapsar/expandir
-  // Em uma implementação real, o componente Sidebar controlaria isso.
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
-
-
   return (
     <Sidebar
       className={`transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-r border-border`}
-      // A prop 'collapsible' pode precisar de um manipulador de estado.
-      // Adicionando um botão de toggle para simular a funcionalidade.
+      collapsible="icon" // Assumindo que o componente Sidebar usa esta prop para controlar o estado
     >
       {/* --- CABEÇALHO --- */}
       <SidebarHeader className="p-4">
@@ -153,7 +144,9 @@ export function AppSidebar() {
                     variant="ghost"
                     size={isCollapsed ? "icon" : "sm"}
                     onClick={handleLogout}
-                    className="w-full justify-start text-muted-foreground hover:text-destructive"
+                    className={`w-full text-muted-foreground hover:text-destructive ${
+                      isCollapsed ? "justify-center" : "justify-start"
+                    }`}
                   >
                     <LogOut className="w-4 h-4 shrink-0" />
                     {!isCollapsed && <span className="ml-2">Sair</span>}
