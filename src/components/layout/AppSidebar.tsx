@@ -43,7 +43,7 @@ export function AppSidebar() {
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
       ? "bg-primary text-primary-foreground font-medium shadow-sm" 
-      : "hover:bg-accent hover:text-accent-foreground";
+      : "text-sidebar-foreground hover:bg-accent hover:text-accent-foreground";
 
   const handleLogout = () => {
     dispatch({ type: 'SET_USER', payload: null });
