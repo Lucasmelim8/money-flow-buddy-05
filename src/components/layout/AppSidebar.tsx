@@ -50,41 +50,36 @@ const getNavCls = (isActive) =>
     : "text-sidebar-foreground hover:bg-accent hover:text-accent-foreground";
 
 // --- COMPONENTE DE ITEM DE NAVEGAÇÃO REUTILIZÁVEL ---
-// Adicionada a classe 'justify-center' quando colapsado para centralizar o ícone.
 const NavItem = ({ item, isCollapsed }) => (
   <SidebarMenuItem>
-    <TooltipProvider delayDuration={0}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <SidebarMenuButton asChild>
-            <NavLink
-              to={item.url}
-              className={({ isActive }) =>
-                `${getNavCls(isActive)} ${isCollapsed ? "justify-center" : ""}`
-              }
-            >
-              <item.icon className="w-4 h-4 shrink-0" />
-              {!isCollapsed && <span className="ml-2">{item.title}</span>}
-            </NavLink>
-          </SidebarMenuButton>
-        </TooltipTrigger>
-        {isCollapsed && (
-          <TooltipContent side="right" className="ml-2">
-            {item.title}
-          </TooltipContent>
-        )}
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <SidebarMenuButton asChild>
+          <NavLink
+            to={item.url}
+            className={({ isActive }) =>
+              `${getNavCls(isActive)} ${isCollapsed ? "justify-center" : ""}`
+            }
+          >
+            <item.icon className="w-4 h-4 shrink-0" />
+            {!isCollapsed && <span className="ml-2">{item.title}</span>}
+          </NavLink>
+        </SidebarMenuButton>
+      </TooltipTrigger>
+      {isCollapsed && (
+        <TooltipContent side="right" className="ml-2">
+          {item.title}
+        </TooltipContent>
+      )}
+    </Tooltip>
   </SidebarMenuItem>
 );
 
 // --- COMPONENTE PRINCIPAL DA SIDEBAR ---
 export function AppSidebar() {
-  // Restaurado o uso do hook 'useSidebar' para consistência com o código original.
   const { state: sidebarState } = useSidebar();
   const isCollapsed = sidebarState === "collapsed";
   
-  // Simulação do estado do usuário.
   const state = { user: mockUser };
 
   const handleLogout = () => {
@@ -92,52 +87,52 @@ export function AppSidebar() {
   };
   
   return (
-    <Sidebar
-      className={`transition-all duration-300 ${isCollapsed ? "w-16" : "w-64"} border-r border-border`}
-      collapsible="icon" // Assumindo que o componente Sidebar usa esta prop para controlar o estado
-    >
-      {/* --- CABEÇALHO --- */}
-      <SidebarHeader className="p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
-            <PiggyBank className="w-5 h-5 text-primary-foreground" />
-          </div>
-          {!isCollapsed && (
-            <div className="overflow-hidden">
-              <h2 className="text-lg font-bold text-foreground whitespace-nowrap">FinanceTracker</h2>
-              <p className="text-xs text-muted-foreground whitespace-nowrap">Controle Financeiro</p>
+    <TooltipProvider delayDuration={0}>
+      <Sidebar
+        className={`transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"} border-r-2 border-border`}
+        collapsible="icon"
+      >
+        {/* --- CABEÇALHO --- */}
+        <SidebarHeader className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+              <PiggyBank className="w-5 h-5 text-primary-foreground" />
             </div>
-          )}
-        </div>
-      </SidebarHeader>
-
-      {/* --- CONTEÚDO PRINCIPAL (NAVEGAÇÃO) --- */}
-      <SidebarContent className="flex-grow">
-        <SidebarGroup>
-          <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
-            Principal
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationItems.map((item) => (
-                <NavItem key={item.url} item={item} isCollapsed={isCollapsed} />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-
-      {/* --- RODAPÉ --- */}
-      <SidebarFooter className="p-4">
-        {state.user && (
-          <div className="space-y-3">
             {!isCollapsed && (
-              <div className="px-3 py-2 rounded-lg bg-muted/50 overflow-hidden">
-                <p className="text-sm font-medium truncate">{state.user.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{state.user.email}</p>
+              <div className="overflow-hidden">
+                <h2 className="text-lg font-bold text-foreground whitespace-nowrap">FinanceTracker</h2>
+                <p className="text-xs text-muted-foreground whitespace-nowrap">Controle Financeiro</p>
               </div>
             )}
-            <TooltipProvider delayDuration={0}>
+          </div>
+        </SidebarHeader>
+
+        {/* --- CONTEÚDO PRINCIPAL (NAVEGAÇÃO) --- */}
+        <SidebarContent className="flex-grow">
+          <SidebarGroup>
+            <SidebarGroupLabel className={isCollapsed ? "sr-only" : "px-4"}>
+              Principal
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navigationItems.map((item) => (
+                  <NavItem key={item.url} item={item} isCollapsed={isCollapsed} />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+
+        {/* --- RODAPÉ --- */}
+        <SidebarFooter className="p-4">
+          {state.user && (
+            <div className="space-y-3">
+              {!isCollapsed && (
+                <div className="px-3 py-2 rounded-lg bg-muted/50 overflow-hidden">
+                  <p className="text-sm font-medium truncate">{state.user.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">{state.user.email}</p>
+                </div>
+              )}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
@@ -156,10 +151,10 @@ export function AppSidebar() {
                   <TooltipContent side="right" className="ml-2">Sair</TooltipContent>
                 )}
               </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
-      </SidebarFooter>
-    </Sidebar>
+            </div>
+          )}
+        </SidebarFooter>
+      </Sidebar>
+    </TooltipProvider>
   );
 }
