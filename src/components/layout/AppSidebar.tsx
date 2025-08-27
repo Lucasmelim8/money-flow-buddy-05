@@ -57,7 +57,7 @@ const NavItem = ({ item, isCollapsed }) => (
             <NavLink
               to={item.url}
               className={({ isActive }) =>
-                `${getNavCls(isActive)} ${isCollapsed ? "justify-center px-0" : ""}`
+                `${getNavCls(isActive)} ${isCollapsed ? "w-full flex justify-center items-center px-0" : ""}`
               }
             >
               <item.icon className={`shrink-0 ${isCollapsed ? "w-6 h-6" : "w-5 h-5"}`} />
