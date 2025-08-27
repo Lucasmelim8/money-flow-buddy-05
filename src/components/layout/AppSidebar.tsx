@@ -107,13 +107,13 @@ export function AppSidebar() {
       </SidebarHeader>
 
       {/* --- MENU --- */}
-      <SidebarContent className={`flex-grow ${isCollapsed ? "flex items-center justify-center" : ""}`}>
-        <SidebarGroup className={isCollapsed ? "flex flex-col items-center space-y-2" : ""}>
+      <SidebarContent className="flex-grow">
+        <SidebarGroup>
           <SidebarGroupLabel className={isCollapsed ? "sr-only" : "px-4"}>
             Principal
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className={isCollapsed ? "space-y-2" : ""}>
+            <SidebarMenu>
               {navigationItems.map((item) => (
                 <NavItem key={item.url} item={item} isCollapsed={isCollapsed} />
               ))}
