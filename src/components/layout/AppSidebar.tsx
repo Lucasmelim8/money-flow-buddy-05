@@ -57,10 +57,10 @@ const NavItem = ({ item, isCollapsed }) => (
             <NavLink
               to={item.url}
               className={({ isActive }) =>
-                `${getNavCls(isActive)} ${isCollapsed ? "justify-center" : ""}`
+                `${getNavCls(isActive)} ${isCollapsed ? "justify-center px-0" : ""}`
               }
             >
-              <item.icon className="w-5 h-5 shrink-0" />
+              <item.icon className={`shrink-0 ${isCollapsed ? "w-6 h-6" : "w-5 h-5"}`} />
               {!isCollapsed && <span className="ml-2">{item.title}</span>}
             </NavLink>
           </SidebarMenuButton>
