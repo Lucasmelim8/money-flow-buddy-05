@@ -88,7 +88,7 @@ export function AppSidebar() {
   
   return (
     <Sidebar
-      className={`transition-all duration-300 ${isCollapsed ? "w-24" : "w-64"} border-r-2 border-border`}
+      className={`transition-all duration-300 ${isCollapsed ? "w-16" : "w-56"} border-r-2 border-border`}
       collapsible="icon"
     >
       {/* --- HEADER --- */}
@@ -107,13 +107,13 @@ export function AppSidebar() {
       </SidebarHeader>
 
       {/* --- MENU --- */}
-      <SidebarContent className="flex-grow">
-        <SidebarGroup>
+      <SidebarContent className={`flex-grow ${isCollapsed ? "flex items-center justify-center" : ""}`}>
+        <SidebarGroup className={isCollapsed ? "flex flex-col items-center space-y-2" : ""}>
           <SidebarGroupLabel className={isCollapsed ? "sr-only" : "px-4"}>
             Principal
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className={isCollapsed ? "space-y-2" : ""}>
               {navigationItems.map((item) => (
                 <NavItem key={item.url} item={item} isCollapsed={isCollapsed} />
               ))}
